@@ -1,0 +1,17 @@
+name: Collect SF Prototyping Data
+on:
+  schedule:
+    - cron:  '0 9 * * *'     # 毎日 UTC09:00＝日本18:00
+  workflow_dispatch:
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with: { python-version: '3.x' }
+      - run: pip install -r requirements.txt
+      - env:
+          GCP_SERVICE_ACCOUNT_JSON: ${{ secrets.GCP_SERVICE_ACCOUNT_JSON }}
+          SPREADSHEET_ID: ${{ secrets.SPREADSHEET_ID }}
+        run: python scrape_sfp.py
